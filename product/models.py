@@ -12,6 +12,9 @@ class Product(models.Model):
                         )
                     )
     tstamp = models.DateTimeField(auto_now_add=True, verbose_name='등록일시')
+    
+    def __str__(self):
+        return f'Product -> name: {self.name}, price: {self.price}, product_type: {self.product_type}, tstamp: {self.tstamp}'
 
     class Meta:
         db_table = 'shinhan_product'
