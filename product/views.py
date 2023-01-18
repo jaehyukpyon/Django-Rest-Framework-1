@@ -1,5 +1,5 @@
 # from django.shortcuts import render
-
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -17,6 +17,7 @@ class ProductListView(APIView):
         
         for product in products:
             p = {
+                'id': product.id,
                 'name': product.name,
                 'price': product.price,
                 'type': product.product_type,
@@ -41,12 +42,23 @@ class ProductListView(APIView):
         )
         
         new_product.save()
-        return Response()
+        return Response({
+            'id': new_product.id,
+            'name': new_product.name,
+            'price': new_product.price,
+            'type': new_product.product_type,
+        }, status=status.HTTP_201_CREATED)
+        
     
 class ProductDetailView(APIView):
     
     def get(self, request, pk, *args, **kwargs):
-        product = Product.objects.get(pk=pk)
+        
+        try:            
+            product = Product.objects.get(pk=pk)
+        except Product.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        
         print(product)
         result = {
             'name': product.name,
@@ -54,3 +66,34 @@ class ProductDetailView(APIView):
             'type': product.product_type,
         }
         return Response(result)
+    
+    def delete(self, request, pk, *args, **kwargs):
+        if Product.objects.filter(pk=pk).exists():
+            product = Product.objects.get(pk=pk)
+            product.delete()
+        return Response({
+            'id': pk
+        }, status=status.HTTP_204_NO_CONTENT)
+        
+    def put(self, request, pk, *args, **kwargs):
+        if not Product.objects.filter(pk=pk).exists():
+            return Response({
+                'id': pk
+            }, status=status.HTTP_404_NOT_FOUND)
+            
+        product = Product.objects.get(pk=pk)
+        keys = list(request.data)
+        print('keys -> ',keys)
+        
+        for key in keys:
+            value = request.data.get(key)
+            setattr(product, key, value)
+            
+        product.save()
+        
+        return Response({
+            'id': product.id,
+            'name': product.name,
+            'price': product.price,
+            'product_type': product.product_type
+        }, status=status.HTTP_200_OK)
