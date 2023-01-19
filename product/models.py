@@ -1,4 +1,5 @@
 from django.db import models
+from member.models import Member
 
 # Create your models here.
 
@@ -20,3 +21,14 @@ class Product(models.Model):
         db_table = 'shinhan_product'
         verbose_name = '상품'
         verbose_name_plural = '상품(들)'
+        
+class ProductComment(models.Model):
+    member = models.ForeignKey(Member, on_delete=models.CASCADE, verbose_name='회원(맴버) PK')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='상품 PK')
+    content = models.TextField(verbose_name="댓글 내용")
+    tstamp = models.DateTimeField(auto_now_add=True, verbose_name='댓글등록일시')
+    
+    class Meta:
+        db_table = 'shinhan_product_comment'
+        verbose_name = '상품의 댓글'
+        verbose_name = '상품의 댓글(들)'
