@@ -1,6 +1,7 @@
 from rest_framework import generics, mixins
 from .models import Product
 from .serializers import ProductSerializer
+from .paginations import ProductLargePagination
 
 # Create your views here.
 
@@ -11,6 +12,8 @@ class ProductListView(
     ):
     
     serializer_class = ProductSerializer
+    
+    pagination_class = ProductLargePagination
     
     def get_queryset(self):
         # name = self.request.query_params.get('name')
