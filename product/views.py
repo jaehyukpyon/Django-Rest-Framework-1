@@ -16,6 +16,8 @@ class ProductListView(
     pagination_class = ProductLargePagination
     
     def get_queryset(self):
+        # if self.request.user.is_authenticated:
+        
         # name = self.request.query_params.get('name')
         # products = Product.objects.all()
         # if name:
@@ -39,9 +41,13 @@ class ProductListView(
         # Queryset
         # Serialize
         # return Response
+        print(request.user)
+        if self.request.user.is_authenticated:
+            print('user is successfully authenticated!')
         return self.list(request, args, kwargs)
     
     def post(self, request, *args, **kwargs):
+    
         return self.create(request, args, kwargs)
     
 class ProductDetailView(
