@@ -1,6 +1,6 @@
 from rest_framework import generics, mixins
-from .models import Product
-from .serializers import ProductSerializer
+from .models import Product, ProductComment
+from .serializers import ProductSerializer, ProductCommentSerializer
 from .paginations import ProductLargePagination
 
 # Create your views here.
@@ -51,11 +51,12 @@ class ProductListView(
         return self.create(request, args, kwargs)
     
 class ProductDetailView(
-    mixins.RetrieveModelMixin,
-    mixins.DestroyModelMixin,
-    mixins.UpdateModelMixin,
-    generics.GenericAPIView,
-):
+        mixins.RetrieveModelMixin,
+        mixins.DestroyModelMixin,
+        mixins.UpdateModelMixin,
+        generics.GenericAPIView,
+    ):
+    
     serializer_class = ProductSerializer
     
     def get_queryset(self):
@@ -69,3 +70,43 @@ class ProductDetailView(
     
     def put(self, request, *args, **kwargs):
         return self.partial_update(request, args, kwargs)
+    
+    
+class ProductCommentListView(
+        mixins.ListModelMixin,
+        generics.GenericAPIView,
+    ):
+    
+    serializer_class = ProductCommentSerializer
+    
+    def get_queryset(self):
+        products_comments = ProductComment.objects.all()
+        
+        return products_comments
+    
+    def get(self, request, *args, **kwargs):
+        print(request.user)
+        if self.request.user.is_authenticated:
+            print('user is successfully authenticated!')
+            
+        return self.list(request, args, kwargs)
+
+class ProductSpecificCommentListView(
+        mixins.ListModelMixin,
+        generics.GenericAPIView,
+    ):
+    
+    serializer_class = ProductCommentSerializer
+    
+    def get_queryset(self):
+        products_comments = ProductComment.objects.filter(product_id=self.kwargs['product_pk'])
+        
+        return products_comments
+    
+    def get(self, request, *args, **kwargs):
+        print(request.user)
+        if self.request.user.is_authenticated:
+            print('user is successfully authenticated!')
+            
+        return self.list(request, args, kwargs)
+    

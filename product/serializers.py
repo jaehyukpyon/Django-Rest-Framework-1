@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Product
+from .models import Product, ProductComment
 
 class ProductSerializer(serializers.ModelSerializer):
     
@@ -12,4 +12,9 @@ class ProductSerializer(serializers.ModelSerializer):
 #     id = serializers.IntegerField()
 #     name = serializers.CharField()
 #     price = serializers.IntegerField()
+
+class ProductCommentSerializer(serializers.ModelSerializer):
     
+    class Meta:
+        model = ProductComment
+        fields = '__all__'

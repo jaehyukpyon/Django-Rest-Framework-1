@@ -5,7 +5,9 @@ from .models import Product, ProductComment
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'tstamp')
+    list_filter = ['product_type']
+    
 
 @admin.register(ProductComment)
 class ProductCommentAdmin(admin.ModelAdmin):
