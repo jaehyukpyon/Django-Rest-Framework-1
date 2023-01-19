@@ -101,6 +101,8 @@ class ProductSpecificCommentListView(
     def get_queryset(self):
         products_comments = ProductComment.objects.filter(product_id=self.kwargs['product_pk'])
         
+        # ProductComment.objects.none()
+        
         return products_comments
     
     def get(self, request, *args, **kwargs):
