@@ -29,8 +29,7 @@ class ProductListView(
             
         if 'name' in self.request.query_params:
             name = self.request.query_params['name']
-            products = products.filter(name__contains=name) # 이 순간 DB에서 가져오지 않음
-        
+            products = products.filter(name__contains=name) # 이 순간 DB에서 가져오지 않음        
             
         products = products.order_by('id') # 이 순간 DB에서 가져오지 않음
         
@@ -44,3 +43,23 @@ class ProductListView(
     
     def post(self, request, *args, **kwargs):
         return self.create(request, args, kwargs)
+    
+class ProductDetailView(
+    mixins.RetrieveModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.UpdateModelMixin,
+    generics.GenericAPIView,
+):
+    serializer_class = ProductSerializer
+    
+    def get_queryset(self):
+        return Product.objects.all().order_by('id')
+    
+    def get(self, request, *args, **kwargs):
+        return self.retrieve(request, args, kwargs)
+    
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, args, kwargs)
+    
+    def put(self, request, *args, **kwargs):
+        return self.partial_update(request, args, kwargs)
