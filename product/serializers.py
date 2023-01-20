@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from .models import Product, ProductComment
+from .models import Product, ProductComment, Like
 
 class ProductSerializer(serializers.ModelSerializer):
     comment_count = serializers.SerializerMethodField()
@@ -59,3 +59,22 @@ class ProductCommentCreateSerializer(serializers.ModelSerializer):
                 'required': False,
             },
         }    
+        
+        
+class LikeCreateSerializer(serializers.ModelSerializer):
+    # member = serializer.IntegerField()
+    
+    member = serializers.HiddenField(
+        default=serializers.CurrentUserDefault(),
+        required=False
+    )  
+    
+    def validate_member(self, value):
+        print('value >> ', value) # request.user
+        if not value.is_authenticated:
+            raise serializers.ValidationError('member is required.')
+        return value
+    
+    class Meta:
+        model = Like
+        fields = '__all__'
