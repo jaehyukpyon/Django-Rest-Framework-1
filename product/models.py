@@ -33,3 +33,12 @@ class ProductComment(models.Model):
         verbose_name = '상품의 댓글'
         verbose_name = '상품의 댓글(들)'
         
+class Like(models.Model):
+    member = models.ForeignKey('member.Member', on_delete=models.CASCADE, verbose_name='회원(맴버) PK')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='상품 PK')
+    
+    class Meta:
+        db_table = 'shinhan_product_like'
+        verbose_name = '상품 좋아요'
+        verbose_name_plural = '상품 좋아요(들)'
+        

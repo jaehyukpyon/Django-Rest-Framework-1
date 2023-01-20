@@ -1,6 +1,10 @@
 from rest_framework import generics, mixins
 from .models import Product, ProductComment
-from .serializers import ProductSerializer, ProductCommentSerializer
+from .serializers import (
+    ProductSerializer, 
+    ProductCommentSerializer,
+    ProductCommentCreateSerializer,
+    )
 from .paginations import ProductLargePagination
 
 # Create your views here.
@@ -99,11 +103,16 @@ class ProductSpecificCommentListView(
     serializer_class = ProductCommentSerializer
     
     def get_queryset(self):
-        products_comments = ProductComment.objects.filter(product_id=self.kwargs['product_pk'])
+        product_id = self.kwargs.get('product_id')
         
-        # ProductComment.objects.none()
+        if product_id:
+            # product__pk
+            # product
+            return ProductComment.objects.filter(product_id=self.kwargs['product_id']).order_by('-id')
         
-        return products_comments
+        return ProductComment.objects.none()
+        
+        # return products_comments
     
     def get(self, request, *args, **kwargs):
         print(request.user)
@@ -111,4 +120,18 @@ class ProductSpecificCommentListView(
             print('user is successfully authenticated!')
             
         return self.list(request, args, kwargs)
+    
+    
+class ProductCommentCreateView(
+        mixins.CreateModelMixin,
+        generics.GenericAPIView,
+    ):
+    
+    serializer_class = ProductCommentCreateSerializer
+    
+    def get_queryset(self):
+        return ProductComment.objects.all()
+    
+    def post(self, request, *args, **kwargs):
+        return self.create(request, args, kwargs)
     
