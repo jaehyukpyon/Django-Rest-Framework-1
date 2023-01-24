@@ -1,0 +1,46 @@
+python manage.py shell
+
+>>> from product.serializers import ProductCommentSerializer
+>>> from product.models import ProductComment
+>>> productcomment = ProductComment()
+
+>>> productcomment.member
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+  File "C:\Users\Jaehyuk\Documents\shinhan-drf-clone\venv\lib\site-packages\django\db\models\fields\related_descriptors.py", line 217, in __get__
+    raise self.RelatedObjectDoesNotExist(
+product.models.ProductComment.member.RelatedObjectDoesNotExist: ProductComment has no member.
+
+>>> productcomment.product
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+  File "C:\Users\Jaehyuk\Documents\shinhan-drf-clone\venv\lib\site-packages\django\db\models\fields\related_descriptors.py", line 217, in __get__
+    raise self.RelatedObjectDoesNotExist(
+product.models.ProductComment.product.RelatedObjectDoesNotExist: ProductComment has no product.
+
+>>> productcomment.content
+''
+
+>>> productcomment.tstamp
+>>> type(productcomment.tstamp)
+<class 'NoneType'>
+
+>>> serializer = ProductCommentSerializer(productcomment)
+>>> serializer.data
+{'id': None, 'content': '', 'tstamp': None, 'member': None, 'product': None}
+
+>>> from rest_framework.renderers import JSONRenderer
+>>> json = JSONRenderer().render(serializer.data)
+>>> json
+b'{"id":null,"content":"","tstamp":null,"member":null,"product":null}'
+
+
+>>> import io
+>>> from rest_framework.parsers import JSONParser
+>>> stream = io.BytesIO(json)
+>>> data = JSONParser().parse(stream)
+>>> serializer = ProductCommentSerializer(data=data)
+>>> serializer.is_valid()
+False
+>>> serializer.errors
+{'content': [ErrorDetail(string='이 필드는 blank일 수 없습니다.', code='blank')], 'member': [ErrorDetail(string='이 필드는 null일 수 없습니다.', code='null')], 'product': [ErrorDetail(string='이 필드는 null일 수 없습니다.', code='null')]}

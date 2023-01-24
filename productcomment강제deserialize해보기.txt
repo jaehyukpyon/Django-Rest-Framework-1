@@ -1,0 +1,15 @@
+python manage.py shell
+
+>>> from product.serializers import ProductCommentSerializer
+>>> from product.models import ProductComment
+>>> import io
+>>> from rest_framework.parsers import JSONParser
+
+>>> json = b'{"id":1,"content":"testcontent","tstamp":"2020-12-25 12:25:48.410","member":222,"product":7777}' 
+>>> stream = io.BytesIO(json)
+>>> data = JSONParser().parse(stream)
+>>> serializer = ProductCommentSerializer(data=data)
+>>> serializer.is_valid()
+False
+>>> serializer.errors
+{'member': [ErrorDetail(string='유효하지 않은 pk "222" - 객체가 존재하지 않습니다.', code='does_not_exist')], 'product': [ErrorDetail(string='유효하지 않은 pk "7777" - 객체가 존재하지 않습니다.', code='does_not_exist')]}

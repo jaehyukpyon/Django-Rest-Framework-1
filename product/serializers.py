@@ -23,9 +23,21 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ProductCommentSerializer(serializers.ModelSerializer):
     
+    def validate(self, data):
+        print('### ProductCommentSerializer - validate called.')
+        for key, value in data.items():
+            print(f'@@@ key: {key}, value:{value}')
+    
     class Meta:
         model = ProductComment
         fields = '__all__'
+        
+# ProductCommentSerializer():
+#     id = IntegerField(label='ID', read_only=True)
+#     content = CharField(label='댓글 내용', style={'base_template': 'textarea.html'})
+#     tstamp = DateTimeField(label='댓글등록일시', read_only=True)
+#     member = PrimaryKeyRelatedField(label='회원(맴버) PK', queryset=Member.objects.all())
+#     product = PrimaryKeyRelatedField(label='상품 PK', queryset=Product.objects.all())
 
 class ProductCommentCreateSerializer(serializers.ModelSerializer):
     
