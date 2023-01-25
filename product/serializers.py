@@ -21,9 +21,13 @@ class ProductSerializer(serializers.ModelSerializer):
 #     name = serializers.CharField()
 #     price = serializers.IntegerField()
 
+import datetime
+
+
 class ProductCommentSerializer(serializers.ModelSerializer):
     product_name = serializers.SerializerMethodField()
     member_username = serializers.SerializerMethodField()
+    tstamp = serializers.DateTimeField(read_only=True, format='%Y-%m-%d %H:%M:%S')
     
     def get_product_name(self, obj):
         return obj.product.name

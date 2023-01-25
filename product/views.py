@@ -133,7 +133,7 @@ class ProductSpecificCommentListView(
             q = ProductComment.objects.filter(product_id=product_id) \
                 .select_related('member', 'product') \
                 .order_by('-id')
-            print(q.explain())
+            # print(q.explain())
             return q
         return ProductComment.objects.none()
         
