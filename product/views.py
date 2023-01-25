@@ -130,16 +130,17 @@ class ProductSpecificCommentListView(
         
         product_id = self.kwargs.get('product_id')
         if product_id:
-            return ProductComment.objects.filter(product_id=product_id) \
+            q = ProductComment.objects.filter(product_id=product_id) \
                 .select_related('member', 'product') \
                 .order_by('-id')
-        
+            print(q.explain())
+            return q
         return ProductComment.objects.none()
         
         # return products_comments
     
     def get(self, request, *args, **kwargs):
-        print(request.user)
+        print(f'### authenticated name: {request.user}')
         if self.request.user.is_authenticated:
             print('user is successfully authenticated!')
             
