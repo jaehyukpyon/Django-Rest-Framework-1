@@ -1,10 +1,12 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework import serializers
 from .models import Member
 from django.contrib.auth.hashers import make_password
 
-class MemberRegisterSerializer(ModelSerializer):
+class MemberRegisterSerializer(serializers.ModelSerializer):
     
     def validate_password(self, value):
+        if len(value) < 8:
+            raise serializers.ValidationError('Too Short Password') # 여기서 바로 json으로 에러 메시지 내보냄. 즉 validate메서드 호출 안 함.
         return make_password(value)
     
     def validate(self, data): 
@@ -16,11 +18,14 @@ class MemberRegisterSerializer(ModelSerializer):
     
     class Meta:
         model = Member
-        fields = ('username', 'password', 'tel')
+        fields = ('id', 'username', 'password', 'tel')
         extra_kwargs = {
+            'id': {
+                'read_only': True,
+            },
             'password': {
-                'write_only': True
-            }
+                'write_only': True,
+            },
         }
         
     #     MemberRegisterSerializer():

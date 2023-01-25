@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'product.apps.ProductConfig',
     'member.apps.MemberConfig',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -146,4 +148,8 @@ SIMPLE_JWT = {
 AUTH_USER_MODEL = 'member.Member'
 AUTHENTICATION_BACKENDS = [
     'member.auth.MemberAuth',
+]
+
+INTERNAL_IPS = [
+    "127.0.0.1",
 ]

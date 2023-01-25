@@ -21,9 +21,9 @@ class ProductListView(
     
     serializer_class = ProductSerializer    
     pagination_class = ProductLargePagination    
-    permission_classes = [ # 이 부분이 추가되니 get요청 보냈을 때, 아래의 get메서드 자체가 호출되지 않는다.
-        IsAuthenticated,
-    ]
+    # permission_classes = [ # 이 부분이 추가되니 get요청 보냈을 때, 아래의 get메서드 자체가 호출되지 않는다.
+    #     IsAuthenticated,
+    # ]
     
     def get_queryset(self):
         # if self.request.user.is_authenticated:
@@ -33,7 +33,8 @@ class ProductListView(
         # if name:
         #   products = products.filter(name__contains=name)
         
-        products = Product.objects.all() # 여러 개의 결과값을 가져오는 QuerySet!!! 이 순간 DB에서 가져오지 않음
+        products = Product.objects.all().prefetch_related('productcomment_set')
+        # 여러 개의 결과값을 가져오는 QuerySet!!! 이 순간 DB에서 가져오지 않음
         
         if 'price' in self.request.query_params:
             price = self.request.query_params['price']
@@ -96,9 +97,17 @@ class ProductCommentListView(
     def get_queryset(self):
         products_comments = ProductComment.objects.all()
         
+        # product_id = self.kwargs.get('product_id')
+        # if product_id:
+        #     return ProductComment.objects.filter(product_id=product_id) \
+        #         .select_related('member', 'product') \
+        #         .order_by('-id')
+        
+        #return ProductComment.objects.none()
         return products_comments
     
     def get(self, request, *args, **kwargs):
+        print('@@@ TEST @@@')
         print(request.user)
         if self.request.user.is_authenticated:
             print('user is successfully authenticated!')
@@ -113,12 +122,17 @@ class ProductSpecificCommentListView(
     serializer_class = ProductCommentSerializer
     
     def get_queryset(self):
-        product_id = self.kwargs.get('product_id')
+        #product_id = self.kwargs.get('product_id')        
+        # if product_id:
+        #     # product__pk
+        #     # product
+        #     return ProductComment.objects.filter(product_id=self.kwargs['product_id']).order_by('-id')
         
+        product_id = self.kwargs.get('product_id')
         if product_id:
-            # product__pk
-            # product
-            return ProductComment.objects.filter(product_id=self.kwargs['product_id']).order_by('-id')
+            return ProductComment.objects.filter(product_id=product_id) \
+                .select_related('member', 'product') \
+                .order_by('-id')
         
         return ProductComment.objects.none()
         

@@ -27,4 +27,5 @@ urlpatterns = [
     path('api/product', include('product.urls')), # api/product로 시작하는 애는 include('product.urls')로 보내라
     path('api/token', TokenObtainPairView.as_view()),
     path('api/member', include('member.urls')),
+    path('__debug__/', include('debug_toolbar.urls')),
 ]

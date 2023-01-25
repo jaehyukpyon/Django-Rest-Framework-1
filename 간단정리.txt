@@ -1,0 +1,7 @@
+처음에 프로젝트 생성시
+pip install django
+django-admin startproject shinhanrest
+SECRET_KEY > JWT 토큰을 검증 할 때 사용
+DEBUG = 노란 화면 보여주는 것
+
+apps.py 에 verbose_name 지정 시 admin 페이지에 적용
