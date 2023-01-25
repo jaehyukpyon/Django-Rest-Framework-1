@@ -17,17 +17,53 @@
 
     <script>
         $(document).ready(function () {
-            $.get('http://127.0.0.1:8000/api/product/1')
-                .then((result) => {
-                    console.log('result')
-                    console.log(result);
-                });
+            // file:///C:/Users/user/Documents/2023/shinhanrest/product_detail.html?product_id=1
+            const search = new URLSearchParams(location.search);
+            const product_id = search.get('product_id');
+            console.log('product_id: ' + product_id);
+            if (product_id > 0) {
+                $.get('http://127.0.0.1:8000/api/product/' + product_id)
+                    .then((result) => {
+                        console.log('Product Result: ' + product_id)
+                        console.log(result);
+                        $('#productName').text(result.name);
+                        $('#productPrice').text(result.price);
+                        $('#productType').text(result.product_type);
+                    });
+
+                $.get('http:127.0.0.1:8000/api/product/' + product_id + '/comment')
+                    .then((result) => {
+                        console.log('Product Comment Result');
+                        console.log(result);
+                        for (let i = 0; i < result.results.length; i++) {
+                            const comment = result.results[i];
+                            $('#comments').append(`<li class="list-group-item">
+                                ${comment.content}<br><br>
+                                ${comment.member_username} 
+                                (${comment.tstamp})`);
+                        }
+                    });
+            }
         });
     </script>
 </head>
 
 <body>
-    <h3>Hi,</h3>
+
+    <div class="container">
+        <br>
+        <h1 id="productName" class="text-center"></h1>
+        <ul>
+            <li>가격: <span id="productPrice"></span></li>
+            <li>유형: <span id="productType"></span></li>
+        </ul>
+        <hr>
+
+        <ul class="list-group list-group-flush" id="comments">
+            <!-- <li class="list-group-item">댓글 Sample<br><br>변재혁 (2023.01.25 14:21:00)</li> -->
+        </ul>
+    </div>
+
 </body>
 
 </html>
