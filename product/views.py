@@ -1,13 +1,14 @@
 from rest_framework import generics, mixins
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from .models import Product, ProductComment, Like
 from .serializers import (
     ProductSerializer, 
     ProductCommentSerializer,
     ProductCommentCreateSerializer,
     LikeCreateSerializer,
-    )
+)
 from .paginations import ProductLargePagination
 
 # Create your views here.
@@ -18,9 +19,11 @@ class ProductListView(
         generics.GenericAPIView,
     ):
     
-    serializer_class = ProductSerializer
-    
-    pagination_class = ProductLargePagination
+    serializer_class = ProductSerializer    
+    pagination_class = ProductLargePagination    
+    permission_classes = [ # 이 부분이 추가되니 get요청 보냈을 때, 아래의 get메서드 자체가 호출되지 않는다.
+        IsAuthenticated,
+    ]
     
     def get_queryset(self):
         # if self.request.user.is_authenticated:
@@ -45,13 +48,17 @@ class ProductListView(
         return products    
     
     def get(self, request, *args, **kwargs):
+        print('@@@ ProductListView - get called.')
         # Queryset
         # Serialize
         # return Response
         print(request.user)
         if self.request.user.is_authenticated:
-            print('user is successfully authenticated!')
+            print('### user is successfully authenticated!')
         return self.list(request, args, kwargs)
+        # else:
+        #     print('### user is NOT authenticated!')
+        #     return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def post(self, request, *args, **kwargs):
     

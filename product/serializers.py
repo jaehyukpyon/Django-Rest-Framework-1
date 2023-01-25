@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 from .models import Product, ProductComment, Like
 
 class ProductSerializer(serializers.ModelSerializer):
-    comment_count = serializers.SerializerMethodField()
+    comment_count = serializers.SerializerMethodField() # client에게 데이터를 줄 때만 사용된다. 
     
     # get_XXXX get_필드명 이런 식으로,
     #self ->
@@ -42,7 +42,7 @@ class ProductCommentSerializer(serializers.ModelSerializer):
 class ProductCommentCreateSerializer(serializers.ModelSerializer):
     
     member = serializers.HiddenField(
-        default=serializers.CurrentUserDefault(),
+        default=serializers.CurrentUserDefault(), # hiddenfield는 default 속성이 꼭 필요하다. 사용자로부터 받더라도 그 값을 쓰는 게 아닌 default로 설정된 값을 사용한다.
         required=False
     )
     

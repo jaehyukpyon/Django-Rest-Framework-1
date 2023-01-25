@@ -3,6 +3,7 @@ from member.models import Member
 
 # Create your models here.
 
+#모델명_set
 class Product(models.Model):
     name = models.CharField(max_length=128, verbose_name="상품명")
     price = models.IntegerField(verbose_name='가격')

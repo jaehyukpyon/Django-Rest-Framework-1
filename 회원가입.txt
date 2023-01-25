@@ -1,0 +1,16 @@
+요구사항
+1. 회원가입 기능
+/api/member 주소로 POST
+- username, password, tel 입력받기
+
+- shinhanrest/urls.py 수정
+- member/urls.py
+- member/views.py
+
+사용해야할 클래스
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.contrib.auth.hashers import make_password
+
+상태 값: 
+참고내용>> 생성 응답은 201입니다.
