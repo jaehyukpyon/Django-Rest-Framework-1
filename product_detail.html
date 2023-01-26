@@ -37,10 +37,12 @@
                         console.log(result);
                         for (let i = 0; i < result.results.length; i++) {
                             const comment = result.results[i];
-                            $('#comments').append(`<li class="list-group-item">
-                                ${comment.content}<br><br>
-                                ${comment.member_username} 
-                                (${comment.tstamp})`);
+                            $('#comments').append(`
+                                <li class="list-group-item">
+                                    ${comment.content}<br><br>
+                                    ${comment.member_username} 
+                                    (${comment.tstamp})
+                                </li>`);
                         }
                     });
             }
