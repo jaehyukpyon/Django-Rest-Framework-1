@@ -20,6 +20,9 @@
             // file:///C:/Users/user/Documents/2023/shinhanrest/product_detail.html?product_id=1
             const search = new URLSearchParams(location.search);
             const product_id = search.get('product_id');
+            let page = search.get('page');
+            if (!page) page = 1;
+
             console.log('product_id: ' + product_id);
             if (product_id > 0) {
                 $.get('http://127.0.0.1:8000/api/product/' + product_id)
@@ -31,7 +34,7 @@
                         $('#productType').text(result.product_type);
                     });
 
-                $.get('http:127.0.0.1:8000/api/product/' + product_id + '/comment')
+                $.get('http:127.0.0.1:8000/api/product/' + product_id + '/comment?page=' + page)
                     .then((result) => {
                         console.log('Product Comment Result');
                         console.log(result);
@@ -59,13 +62,26 @@
             <li>가격: <span id="productPrice"></span></li>
             <li>유형: <span id="productType"></span></li>
         </ul>
+
+        <br>
+        <br>
         <hr>
 
-        <ul class="list-group list-group-flush" id="comments">
-            <!-- <li class="list-group-item">댓글 Sample<br><br>변재혁 (2023.01.25 14:21:00)</li> -->
-        </ul>
-    </div>
+        <ul class="list-group list-group-flush" id="comments"></ul>
 
+        <br><hr>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="?product_id=1&page=1">1</a></li>
+                <li class="page-item"><a class="page-link" href="?product_id=1&page=2">2</a></li>
+                <li class="page-item"><a class="page-link" href="?product_id=1&page=3">3</a></li>
+                <li class="page-item"><a class="page-link" href="?product_id=1&page=4">4</a></li>
+                <li class="page-item"><a class="page-link" href="?product_id=1&page=5">5</a></li>
+            </ul>
+        </nav>
+    </div>
+<!-- api/product1/comment?page1, 2, ... -->
 </body>
 
 </html>
